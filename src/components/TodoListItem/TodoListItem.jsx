@@ -7,7 +7,6 @@ import {
   Button,
   FormControl,
   InputLabel,
-  TextField,
   Grid,
 } from '@mui/material';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -59,8 +58,6 @@ const TodoListItem = ({
   useEffect(() => {
     if (inEditMode) setSelectedTodoItem(todo);
   }, [inEditMode, todo]);
-
-  console.log('selectedTodoItem', selectedTodoItem, typeof selectedTodoItem);
 
   return (
     <Box>

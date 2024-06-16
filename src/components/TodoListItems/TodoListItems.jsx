@@ -35,7 +35,7 @@ const TodoListItems = ({
   const fetchTodoItems = async () => {
     try {
       const todoItems = await getTodoItems();
-      setApiTodoItems(todoItems);
+      setApiTodoItems(Array.isArray(todoItems) ? todoItems : []);
     } catch (error) {
       console.error('Failed to fetch todo items:', error);
     }
@@ -113,12 +113,17 @@ const TodoListItems = ({
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleEdit(params.row)} data-testid="edit">
+          <IconButton
+            color="primary"
+            data-testid="edit"
+            onClick={() => handleEdit(params.row)}
+          >
             <EditIcon />
           </IconButton>
           <IconButton
-            onClick={() => handleDeleteClick(params.row)}
+            color="error"
             data-testid="delete"
+            onClick={() => handleDeleteClick(params.row)}
           >
             <DeleteIcon />
           </IconButton>
