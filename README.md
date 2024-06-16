@@ -38,7 +38,7 @@ Create a ToDo List App with proper unit tests.
 
 3. **Run the JSON Server Locally for REST webservices:**
    ```bash
-   npm serve
+   npm run server
    ```
    This will start the JSON server on port 8000.
 
