@@ -5,12 +5,6 @@ import { connect } from 'react-redux';
 import {
   Typography,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
   IconButton,
   Grid,
   Box,
@@ -20,6 +14,7 @@ import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { setIsTodoItemEdited, setTodo } from '../../store/actions';
 import TodoListItem from '../../components/TodoListItem/TodoListItem';
 import moment from 'moment';
+import ConfirmationDialog from '../../common/components/ConfimationDialog/ConfirmationDialog';
 
 const TodoListItems = ({
   todos,
@@ -77,8 +72,9 @@ const TodoListItems = ({
     setOpen(true);
   };
 
-  const handleCancel = () => {
+  const handleClose = () => {
     setOpen(false);
+    setIsTodoItemEdited(false);
   };
 
   const handleConfirm = () => {
@@ -116,14 +112,14 @@ const TodoListItems = ({
           <IconButton
             color="primary"
             data-testid="edit"
-            onClick={() => handleEdit(params.row)}
+            onClick={() => handleEdit(params?.row)}
           >
             <EditIcon />
           </IconButton>
           <IconButton
             color="error"
             data-testid="delete"
-            onClick={() => handleDeleteClick(params.row)}
+            onClick={() => handleDeleteClick(params?.row)}
           >
             <DeleteIcon />
           </IconButton>
@@ -197,49 +193,29 @@ const TodoListItems = ({
           </Grid>
         </Grid>
       </StyledCard>
-
-      <Dialog open={open} onClose={handleCancel} data-testid="dialog">
-        <DialogTitle>
-          {dialogType === 'edit' ? 'Edit Todo Item' : 'Delete Todo Item'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText data-testid="dialog-content">
-            {dialogType === 'edit'
-              ? 'Are you sure you want to edit the selected todo item?'
-              : 'Are you sure you want to delete the selected todo item?'}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancel} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirm}
-            color="primary"
-            data-testid="dialog-confirm-button"
-          >
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
+      <ConfirmationDialog
+        open={open}
+        onClose={handleClose}
+        onConfirm={handleConfirm}
+        dialogTitle={
+          dialogType === 'edit' ? 'Edit Todo Item' : 'Delete Todo Item'
+        }
+        dialogContent={
+          dialogType === 'edit'
+            ? 'Are you sure you want to edit the selected todo item?'
+            : 'Are you sure you want to delete the selected todo item?'
+        }
+      />
+      <ConfirmationDialog
         open={isTodoItemEdited}
-        onClose={handleCancel}
-        data-testid="edit-dialog"
-      >
-        <DialogTitle>{`Edit Todo Item: ${selectedTodo?.id || ''}`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <TodoListItem inEditMode todo={selectedTodo} />
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setIsTodoItemEdited(false)} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onClose={handleClose}
+        onConfirm={handleConfirm}
+        dialogTitle={`Edit Todo Item: ${selectedTodo?.id || ''}`}
+        dialogContent={
+          <TodoListItem inEditMode todo={selectedTodo} />
+        }
+        showConfirmButton={false}
+      />
     </>
   );
 };

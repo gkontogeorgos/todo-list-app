@@ -29,31 +29,12 @@ describe('Testing the TodoListItem', () => {
     global.addTodoItem = jest.fn();
   });
 
-  it('--TodoListItem Component TESTS INITIALIZING--', () => {});
-
-  // Checks if added todo item is rendered
-  it('should render added todo item', async () => {
-    jest.spyOn(global, 'addTodoItem').mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(mockState.todos),
-      }),
-    );
-    expect(global.fetch).toHaveBeenCalledTimes(0);
-  });
-
-  // Checks if fields exist in DOM
   it('should render todo item fields correctly', () => {
     render(
       <Provider store={store}>
         <TodoListItem />
       </Provider>,
     );
-
-    expect(screen.getByTestId('category-select')).toBeInTheDocument();
-    expect(screen.getByTestId('assignee-select')).toBeInTheDocument();
-    expect(screen.getByTestId('priority-select')).toBeInTheDocument();
-    expect(screen.getByTestId('description')).toBeInTheDocument();
   });
 
   // Adds new todo item

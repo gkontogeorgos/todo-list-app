@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import moment from 'moment';
-import {
-  Box,
-  MenuItem,
-  Select,
-  Button,
-  FormControl,
-  InputLabel,
-  Grid,
-} from '@mui/material';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { Button, Grid } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import { categories, assignees, priorities } from '../../constants/constants';
 import {
   StyledCard,
-  StyledFormItem,
   StyledSaveButtonContainer,
   StyledTextarea,
 } from './styles';
 import { addTodoItem, updateTodoItem } from '../../routes/endpoints';
 import { setIsTodoItemEdited, setTodo } from '../../store/actions';
 import { connect } from 'react-redux';
+import { StyledFormItem } from './styles';
+import { FormControl } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import moment from 'moment';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import SelectField from '../../common/components/SelectField/SelectField';
+import { assignees, categories, priorities } from '../../common/constants/constants';
 
 const TodoListItem = ({
   todos,
@@ -32,11 +26,11 @@ const TodoListItem = ({
 }) => {
   const initialState = {
     id: uuidv4(),
-    category: '',
-    assignee: '',
+    category: categories[0]?.value || '',
+    assignee: assignees[0]?.value || '',
     description: '',
-    priority: '',
-    completionDate: null,
+    priority: priorities[0]?.value || '',
+    completionDate: new Date(),
   };
   const [selectedTodoItem, setSelectedTodoItem] = useState(initialState);
 
@@ -60,83 +54,40 @@ const TodoListItem = ({
   }, [inEditMode, todo]);
 
   return (
-    <Box>
+    <>
       <StyledCard style={{ boxShadow: inEditMode && 'none' }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={12}>
-            <StyledFormItem>
-              <FormControl fullWidth htmlFor="category">
-                <InputLabel shrink htmlFor="category">
-                  Category
-                </InputLabel>
-                <Select
-                  label="Category"
-                  value={selectedTodoItem?.category}
-                  onChange={(event) =>
-                    handleChange('category', event.target.value)
-                  }
-                  data-testid="category-select"
-                  htmlFor="category"
-                  fullWidth
-                >
-                  {categories?.map((option) => (
-                    <MenuItem key={option.id} value={option.value}>
-                      <div style={{ display: 'flex' }} htmlFor="category">
-                        {option.value}
-                      </div>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </StyledFormItem>
+          <Grid item xs={12}>
+            <SelectField
+              label="Category"
+              htmlFor="category"
+              dataTestId="category"
+              value={selectedTodoItem?.category}
+              handleChange={(value) => handleChange('category', value)}
+              options={categories}
+            />
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <StyledFormItem>
-              <FormControl fullWidth>
-                <InputLabel shrink>Assignee</InputLabel>
-                <Select
-                  label="Assignee"
-                  value={selectedTodoItem?.assignee}
-                  data-testid="assignee-select"
-                  htmlFor="assignee"
-                  fullWidth
-                  onChange={(event) =>
-                    handleChange('assignee', event.target.value)
-                  }
-                >
-                  {assignees?.map((option) => (
-                    <MenuItem key={option.id} value={option.value}>
-                      <div style={{ display: 'flex' }}>{option.value}</div>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </StyledFormItem>
+          <Grid item xs={12}>
+            <SelectField
+              label="Assignee"
+              htmlFor="assignee"
+              dataTestId="assignee"
+              value={selectedTodoItem?.assignee}
+              handleChange={(value) => handleChange('assignee', value)}
+              options={assignees}
+            />
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <StyledFormItem>
-              <FormControl fullWidth>
-                <InputLabel shrink>Priority</InputLabel>
-                <Select
-                  label="Priority"
-                  value={selectedTodoItem?.priority}
-                  data-testid="priority-select"
-                  htmlFor="priority"
-                  onChange={(event) =>
-                    handleChange('priority', event.target.value)
-                  }
-                  fullWidth
-                >
-                  {priorities?.map((option) => (
-                    <MenuItem key={option.id} value={option.value}>
-                      <div style={{ display: 'flex' }}>{option.value}</div>
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </StyledFormItem>
+          <Grid item xs={12}>
+            <SelectField
+              label="Priority"
+              htmlFor="priority"
+              dataTestId="priority"
+              value={selectedTodoItem?.priority}
+              handleChange={(value) => handleChange('priority', value)}
+              options={priorities}
+            />
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12}>
             <StyledFormItem>
               <FormControl fullWidth>
                 <StyledTextarea
@@ -153,7 +104,7 @@ const TodoListItem = ({
               </FormControl>
             </StyledFormItem>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12}>
             <StyledFormItem>
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -189,7 +140,7 @@ const TodoListItem = ({
           </Grid>
         </Grid>
       </StyledCard>
-    </Box>
+    </>
   );
 };
 
