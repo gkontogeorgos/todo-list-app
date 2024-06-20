@@ -13,7 +13,7 @@ import { StyledFormItem } from './styles';
 import { FormControl } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import moment from 'moment';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import SelectField from '../../common/components/SelectField/SelectField';
 import { assignees, categories, priorities } from '../../common/constants/constants';
 
