@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { HeaderBox } from './styles';
 
 const Header = () => {
-  console.log('test1');
+  console.log('test2');
   return (
     <HeaderBox>
       <Typography variant="h4" component="h1">
