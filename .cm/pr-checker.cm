@@ -24,9 +24,9 @@ automations:
           method: POST
           headers: '{"Content-type": "application/json"}'
           body: '{"issues":["{{ticketid}}"],"data":{"pr_url":"https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{pr.number}}",
-                "pr_approvals": {{ pr.approvals }}, "pr_assignees": {{ pr.assignees }}, 
-                "pr_conversations": {{ pr.conversations }}, "pr_comments": {{ pr.comments }},
-                "pr_reviewers": {{ pr.reviewers}} }}'
+                "pr_approvals": {{pr.approvals}}, "pr_assignees": {{pr.assignees}}, 
+                "pr_conversations": {{pr.conversations}}, "pr_comments": {{pr.comments}},
+                "pr_reviewers": {{pr.reviewers}}}}'
 
 has:
   jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
