@@ -3,10 +3,9 @@
 manifest:
   version: 1.0
 
-on:
-  - pr_created
+assigneeRegex: r/(?<=\/gitstream assign-jira ).*(?=<br \/>)/
 
-{% set ticketid = "\b[A-Za-z]+-\d+\b" %}
+{% set ticketid = "" %}
 {% for ticket in tickets %}
 {% if (ticket | includes(regex=r/.+/)) %}
 {% set ticketid = ticket %}
@@ -14,16 +13,16 @@ on:
 {% endfor %} 
 
 automations:
-  jira_change_status: 
+  jira_assign: 
     if:
-      - {{ pr.comments | length > 0 }}    
+      - {{ pr.description | includes(regex=assigneeRegex) }}
     run:
       - action: send-http-request@v1
         args:
-          url: "{{ env.JIRA_CHANGE_STATUS_WEBHOOK }}"
+          url: "{{ env.JIRA_WEBHOOK }}}"
           method: POST
           headers: '{"Content-type": "application/json"}'
-          body: '{"issues":["{{ticketid}}"],"data":{"pr_url":"https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{pr.number}}"}}'
+          body: '{"issues":["{{ticketid}}"],"data":{"assignee":"{{pr.description | capture(regex=assigneeRegex)}}"}}'
 
 has:
   jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
