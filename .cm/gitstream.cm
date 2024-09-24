@@ -22,7 +22,7 @@ automations:
     run:
       - action: add-label@v1
         args:
-          label: "missing-jira"
+          label: {{ calc.branch_name }} 
           color: {{ colors.red }}
       - action: add-comment@v1
         args:
