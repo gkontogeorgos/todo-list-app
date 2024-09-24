@@ -1,9 +1,21 @@
+
 # -*- mode: yaml -*-
 # This example configuration for provides basic automations to get started with gitStream.
 # View the gitStream quickstart for more examples: https://docs.gitstream.cm/examples/
 manifest:
   version: 1.0
 
+provider: jira
+
+# Change this to the name of your Jira organization
+orgName: utopia-heaven
+
+{% set ticketid = "" %}
+{% for ticket in tickets %}
+{% if (ticket | includes(regex=r/.+/)) %}
+{% set ticketid = ticket %}
+{% endif %}
+{% endfor %} 
 
 automations:
   # Add a label that indicates how many minutes it will take to review the PR.
@@ -22,7 +34,7 @@ automations:
     run:
       - action: add-label@v1
         args:
-          label: {{ branch.name.split("/")[1] }} 
+          label: {{ branch.name.split("/")[1] }}          
           color: {{ colors.red }}
       - action: add-comment@v1
         args:
@@ -37,20 +49,6 @@ automations:
       - action: explain-code-experts@v1 
         args:
           gt: 10 
-
-provider: jira
-
-# Change this to the name of your Jira organization
-orgName: utopia-heaven
-
-{% set ticketid = "" %}
-{% for ticket in tickets %}
-{% if (ticket | includes(regex=r/.+/)) %}
-{% set ticketid = ticket %}
-{% endif %}
-{% endfor %} 
-
-automations:
   link_jira:
     if:
       - {{ has.ticket_in_title or has.ticket_in_branch }}
@@ -66,7 +64,6 @@ tracker:
 
 tickets:
   - {{branch.name.split("/")[1]}}
-  - {{pr.title | capture(regex=tracker[provider].pattern)}}
 
 # +----------------------------------------------------------------------------+
 # | Custom Expressions                                                         |
