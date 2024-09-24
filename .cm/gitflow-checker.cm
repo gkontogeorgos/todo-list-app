@@ -38,6 +38,35 @@ automations:
         args:
           gt: 10 
 
+provider: jira
+
+# Change this to the name of your Jira organization
+orgName: utopia-heaven
+
+{% set ticketid = "" %}
+{% for ticket in tickets %}
+{% if (ticket | includes(regex=r/.+/)) %}
+{% set ticketid = ticket %}
+{% endif %}
+{% endfor %} 
+
+automations:
+  link_jira:
+    if:
+      - {{ has.ticket_in_title or has.ticket_in_branch }}
+    run:
+      - action: add-comment@v1
+        args:
+          comment: Issue Tracker Link - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
+
+tracker:
+  jira:
+    baseurl: https://[orgName].atlassian.net/browse/
+    pattern: r/\b[A-Za-z]+-\d+\b/
+
+tickets:
+  - {{branch.name.split("/")[1]}}
+  - {{pr.title | capture(regex=tracker[provider].pattern)}}
 
 # +----------------------------------------------------------------------------+
 # | Custom Expressions                                                         |
@@ -54,4 +83,4 @@ has:
 colors:
   red: 'b60205'
   yellow: 'fbca04'
-  green: '#0e8a16'
+  green: '0e8a16'
