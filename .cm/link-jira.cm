@@ -6,7 +6,7 @@ manifest:
 provider: jira
 
 # Change this to the name of your Jira organization
-orgName: org
+orgName: utopia-heaven
 
 {% set ticketid = "" %}
 {% for ticket in tickets %}
