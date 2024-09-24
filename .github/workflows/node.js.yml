@@ -1,0 +1,41 @@
+name: PR Webhook Integration
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  update-jira:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use the appropriate Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Webhook Logic
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }} # Set your Jira base URL in GitHub secrets
+          JIRA_CLIENT_ID: ${{ secrets.JIRA_CLIENT_ID }} # Set your Jira client ID in GitHub secrets
+          JIRA_CLIENT_SECRET: ${{ secrets.JIRA_CLIENT_SECRET }} # Set your Jira client secret in GitHub secrets
+          JIRA_REDIRECT_URI: ${{ secrets.JIRA_REDIRECT_URI }} # Set your redirect URI in GitHub secrets
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token to authenticate API calls
+        run: |
+          # Fetch the PR details from the environment variables or directly from GitHub API
+          PR_NUMBER=${{ github.event.number }}
+          PR_TITLE=${{ github.event.pull_request.title }}
+          PR_USER=${{ github.event.pull_request.user.login }}
+          
+          # Call your script that handles the webhook logic
+          node ./your-script.js "$PR_NUMBER" "$PR_TITLE" "$PR_USER" # Pass relevant parameters to your script
+
+      - name: Notify Result
+        run: echo "Webhook processing completed for PR #${{ github.event.number }}"
+
