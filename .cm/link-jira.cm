@@ -22,11 +22,11 @@ automations:
     run:
       - action: add-comment@v1
         args:
-          comment: Issue Tracker Link - [{{ticketid}}]({{tracker{{ provider }}.baseurl}}{{ticketid}})
+          comment: Issue Tracker Link - [{{ticketid}}]({{tracker[provider].baseurl}}{{ticketid}})
 
 has:
-  ticket_in_title: {{ pr.title | includes(regex=tracker{{ provider }}.pattern) }}
-  ticket_in_branch: {{ branch.name | includes(regex=tracker{{ provider }}.pattern) }}
+  ticket_in_title: {{ pr.title | includes(regex=tracker[provider].pattern) }}
+  ticket_in_branch: {{ branch.name | includes(regex=tracker[provider].pattern) }}
 
 tracker:
   jira:
@@ -34,5 +34,5 @@ tracker:
     pattern: r/\b[A-Za-z]+-\d+\b/
 
 tickets:
-  - {{branch.name | capture(regex=tracker{{ provider }}.pattern)}}
-  - {{pr.title | capture(regex=tracker{{ provider }}.pattern)}}
+  - {{branch.name | capture(regex=tracker[provider].pattern)}}
+  - {{pr.title | capture(regex=tracker[provider].pattern)}}
