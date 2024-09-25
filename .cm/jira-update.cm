@@ -24,6 +24,18 @@ automations:
           method: POST
           headers: '{"Content-type": "application/json"}'
           body: '{"issues":["{{ticketid}}"],"data":{"pr_url":"https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{pr.number}}"}}'
+  handle_jira_response:
+    if:
+      - {{ response.status_code == 200 }}
+    run:
+      - action: add-comment@v1
+        args:
+          comment: "Jira issue updated successfully."
+    else:
+      - action: add-comment@v1
+        args:
+          comment: "Failed to update Jira issue. Please check the webhook."
+
 
 has:
   jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
