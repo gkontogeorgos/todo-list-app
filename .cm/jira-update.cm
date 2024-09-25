@@ -16,7 +16,7 @@ on:
 automations:
   jira_change_status: 
     if:
-      - {{ pr.comments | length > 0 }}    
+      - {{ pr.comments }}    
     run:
       - action: send-http-request@v1
         args:
@@ -24,6 +24,7 @@ automations:
           method: POST
           headers: '{"Content-type": "application/json"}'
           body: '{"issues":["{{ticketid}}"],"data":{"pr_url":"https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{pr.number}}"}}'
+
 
 has:
   jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
