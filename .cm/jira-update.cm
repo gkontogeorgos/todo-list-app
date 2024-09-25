@@ -16,7 +16,7 @@ on:
 automations:
   jira_change_status: 
     if:
-      - {{ pr.comments | length > 0 }}    
+      - {{ pr.comments }}    
     run:
       - action: send-http-request@v1
         args:
@@ -24,17 +24,6 @@ automations:
           method: POST
           headers: '{"Content-type": "application/json"}'
           body: '{"issues":["{{ticketid}}"],"data":{"pr_url":"https://github.com/{{repo.owner}}/{{repo.name}}/pull/{{pr.number}}"}}'
-  handle_jira_response:
-    if:
-      - {{ response.status_code == 200 }}
-    run:
-      - action: add-comment@v1
-        args:
-          comment: "Jira issue updated successfully."
-    else:
-      - action: add-comment@v1
-        args:
-          comment: "Failed to update Jira issue. Please check the webhook."
 
 
 has:
