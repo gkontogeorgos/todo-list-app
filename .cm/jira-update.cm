@@ -16,7 +16,7 @@ on:
 automations:
   jira_change_status: 
     if:
-      - {{ pr.comments }}    
+      - {{ pr.comments | length > 0 }}    
     run:
       - action: send-http-request@v1
         args:
