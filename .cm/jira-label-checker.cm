@@ -37,12 +37,6 @@ automations:
         args:
           gt: 10 
 
-
-# +----------------------------------------------------------------------------+
-# | Custom Expressions                                                         |
-# | https://docs.gitstream.cm/how-it-works/#custom-expressions                 |
-# +----------------------------------------------------------------------------+
-
 calc:
   etr: {{ branch | estimatedReviewTime }}
 
