@@ -1,0 +1,16 @@
+automations:
+  add_jira_to_title:
+    if:
+      - {{ not has.jira_ticket_in_title }}
+    run:
+      - action: update-title@v1
+        args:
+          concat_mode: prepend
+          title: |
+            {{ branch.name.split("/").[1] }} -
+
+has:
+  jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
+  jira_ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
+
+jira_ticket_from_desc: {{ pr.description | capture(regex=r/\b[A-Za-z]+-\d+\b/) }}
