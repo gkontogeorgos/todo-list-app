@@ -1,3 +1,9 @@
+# -*- mode: yaml -*-
+# This example configuration for provides basic automations to get started with gitStream.
+# View the gitStream quickstart for more examples: https://docs.gitstream.cm/examples/
+manifest:
+  version: 1.0
+
 automations:
   add_jira_to_title:
     if:
@@ -7,7 +13,7 @@ automations:
         args:
           concat_mode: prepend
           title: |
-            {{ branch.name.split("/").[1] }} -
+            {{ branch.name.split("/")[1] }} -
 
 has:
   jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
